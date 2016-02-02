@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MentalNote Settings</title>
+        <style>
+            html, body: { padding: 10px; }
+            * { line-height: 1.7em; }
+            .right { float: right; }
+            .clearfix:after { content:""; display:table; clear:both; }
+        </style>
+    </head>
+
+    <body>
+        <label for="base-url">
+            URL
+        </label>
+        <input type="text" id="base-url" name="base-url" value="" placeholder="e.g. http://mydomain.com/mental-note">
+
+        <span id="status"></span>
+
+        <div class="clearfix">
+            <button class="right" id="save">Save</button>
+        </div>
+
+        <script src="options.js"></script>
+    </body>
+</html>
