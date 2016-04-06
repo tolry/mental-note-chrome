@@ -15,6 +15,7 @@ function add_url() {
     chrome.tabs.getSelected(null, function(tab) {
         var url = options.baseUrl + "quick-add?url=" + encodeURIComponent(tab.url);
         chrome.tabs.update(tab.id, {url: url});
+        window.close();
     });
 };
 
