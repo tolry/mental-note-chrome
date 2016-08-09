@@ -11,10 +11,9 @@ function restore_options() {
     });
 };
 
-function genericOnClick(info, tab) {
-    var url = options.baseUrl + "quick-add?url=" + encodeURIComponent(info.linkUrl);
-    chrome.tabs.create({url: url});
-}
-
 restore_options();
-var id = chrome.contextMenus.create({"title": "Add URL to Mental-Note", "contexts":["link"], "onclick": genericOnClick});
+
+chrome.browserAction.onClicked.addListener(function(tab) {
+    var url = options.baseUrl + "quick-add?url=" + encodeURIComponent(tab.url);
+    chrome.tabs.create({url: url});
+});
