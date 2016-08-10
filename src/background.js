@@ -1,19 +1,23 @@
 var options = {};
 
-// Restores select box and checkbox state using the preferences
-// stored in chrome.storage.
 function restore_options() {
-    // Use default value color = 'red' and likesColor = true.
-    chrome.storage.sync.get({
-        baseUrl: ''
-    }, function(items) {
+    chrome.storage.sync.get({'baseUrl': '', 'newTab': false}, function (items) {
         options = items;
     });
 };
 
 restore_options();
 
-chrome.browserAction.onClicked.addListener(function(tab) {
+chrome.browserAction.onClicked.addListener(function (tab) {
     var url = options.baseUrl + "quick-add?url=" + encodeURIComponent(tab.url);
-    chrome.tabs.create({url: url});
+
+    if (options.newTab === true) {
+        chrome.tabs.create({url: url});
+    } else {
+        chrome.tabs.query({currentWindow: true, active: true}, function (tab) {
+            chrome.tabs.update(tab.id, {url: url});
+        });
+    }
+
 });
+
