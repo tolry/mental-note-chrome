@@ -7,7 +7,7 @@ function save_options() {
     chrome.storage.sync.set(
         {'baseUrl': baseUrl, 'newTab': newTab}, function () {
             var status = document.getElementById('status');
-            status.textContent = 'Options saved.';
+            status.textContent = 'Options saved!';
             setTimeout(function () {
                 status.textContent = '';
             }, 750);
