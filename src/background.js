@@ -39,3 +39,7 @@ chrome.browserAction.onClicked.addListener(function (tab){
     var info = false;
     linker(info, tab);
 });
+
+chrome.commands.onCommand.addListener(function(command) {
+    console.log('Command:', command);
+});
