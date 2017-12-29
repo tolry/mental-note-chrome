@@ -24,6 +24,11 @@ function addLink(url, title, preview) {
     }
 
     let mentalNoteUrl = options.baseUrl;
+
+    if (options.baseUrl[options.baseUrl.length - 1] !== '/') {
+        mentalNoteUrl += '/';
+    }
+
     mentalNoteUrl += "quick-add";
     mentalNoteUrl += "?url=" + encodeURIComponent(url);
 
