@@ -1,41 +1,64 @@
-var options = {};
+let options = {};
+restoreOptions();
 
-function restore_options() {
-    chrome.storage.sync.get({'baseUrl': '', 'newTab': false}, function (items) {
-        options = items;
-    });
+function restoreOptions() {
+    chrome.storage.sync.get(
+        {'baseUrl': '', 'newTab': false},
+        function (items) {
+            options = items;
+        }
+    );
 };
 
-restore_options();
+function addLink(url, title, preview) {
+    if (! url) {
+        alert('no url given');
 
-function linker(info, tab) {
-
-    var linkUrl = tab.url;
-
-    if(info.linkUrl) {
-        linkUrl = info.linkUrl;
+        return;
     }
 
-    var url = options.baseUrl + "quick-add?url=" + encodeURIComponent(linkUrl);
+    if (! options.baseUrl) {
+        alert('please configure mental note base url first');
 
-    if (options.newTab === true) {
-        chrome.tabs.create({url: url});
-    } else {
-        chrome.tabs.query({currentWindow: true, active: true}, function (tab) {
-            chrome.tabs.update(tab.id, {url: url});
-        });
+        return;
     }
+
+    let mentalNoteUrl = options.baseUrl;
+
+    if (options.baseUrl[options.baseUrl.length - 1] !== '/') {
+        mentalNoteUrl += '/';
+    }
+
+    mentalNoteUrl += "quick-add";
+    mentalNoteUrl += "?url=" + encodeURIComponent(url);
+
+    if (title) {
+        mentalNoteUrl += "&title=" + encodeURIComponent(title);
+    }
+
+    if (preview) {
+        mentalNoteUrl += "&preview=" + encodeURIComponent(preview);
+    }
+
+    if (options.newTab) {
+        chrome.tabs.create({url: mentalNoteUrl});
+
+        return;
+    }
+
+    chrome.tabs.query({currentWindow: true, active: true}, function (tab) {
+        chrome.tabs.update(tab.id, {url: mentalNoteUrl});
+    });
 }
 
-var id = chrome.contextMenus.create(
-    {
-        "title": "Add URL to Mental-Note",
-        "contexts":["link"],
-        "onclick": linker
+chrome.contextMenus.create({
+    "title": "Add URL to Mental-Note",
+    "contexts":["link"],
+    "onclick": function (info) {
+        addLink(info.linkUrl);
     }
-);
+});
 
 chrome.browserAction.onClicked.addListener(function (tab){
-    var info = false;
-    linker(info, tab);
+    addLink(tab.url, tab.title);
 });
